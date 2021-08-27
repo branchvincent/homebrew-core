@@ -28,6 +28,13 @@ class Flux < Formula
     depends_on "pkg-config" => :build
   end
 
+  # NOTE: The version here is specified in the go.mod of influxdb.
+  # If you're upgrading to a newer influxdb version, check to see if this needs upgraded too.
+  resource "pkg-config-wrapper" do
+    url "https://github.com/influxdata/pkg-config/archive/refs/tags/v0.2.8.tar.gz"
+    sha256 "9d3f3bbcac7c787f6e8846e70172d06bd4d7394b4bcd0b8572fe2f1d03edc11b"
+  end
+
   # Support go 1.17, remove when upstream patch is merged/released
   # https://github.com/influxdata/flux/pull/3982
   patch do
@@ -36,6 +43,13 @@ class Flux < Formula
   end
 
   def install
+    # Set up the influxdata pkg-config wrapper to enable just-in-time compilation & linking
+    # of the Rust components in the server.
+    resource("pkg-config-wrapper").stage do
+      system "go", "build", *std_go_args, "-o", buildpath/"bootstrap/pkg-config"
+    end
+    ENV.prepend_path "PATH", buildpath/"bootstrap"
+
     system "make", "build"
     system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/flux"
     bin.install %w[flux]
