@@ -2,8 +2,8 @@ class Flux < Formula
   desc "Lightweight scripting language for querying databases"
   homepage "https://www.influxdata.com/products/flux/"
   url "https://github.com/influxdata/flux.git",
-      tag:      "v0.126.0",
-      revision: "5daaedac25dfa11cf577e9a662e59e5c721f80ed"
+      tag:      "v0.127.0",
+      revision: "5a5904937544459f5f635f842d0b3d2ade6096cb"
   license "MIT"
   head "https://github.com/influxdata/flux.git"
 
@@ -31,13 +31,13 @@ class Flux < Formula
   # Support go 1.17, remove when upstream patch is merged/released
   # https://github.com/influxdata/flux/pull/3982
   patch do
-    url "https://github.com/influxdata/flux/commit/233c875bcb7d071d47149b0730d1cb5f15eb6a5a.patch?full_index=1"
-    sha256 "fadb3ee0dc5efec615b6ffc4338f9a0947d42b58406b393587754fab0196ca62"
+    url "https://github.com/influxdata/flux/commit/7f4c0af55a2d3854446c3bfbe06d04a45c7748f7.patch?full_index=1"
+    sha256 "f3177a3d8f06c5c99aa04ed1742af508e985519e8a87ce50609dd658bb39c588"
   end
 
   def install
     system "make", "build"
-    system "go", "build", "./cmd/flux"
+    system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/flux"
     bin.install %w[flux]
     include.install "libflux/include/influxdata"
     lib.install Dir["libflux/target/*/release/libflux.{dylib,a,so}"]
