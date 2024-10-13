@@ -19,7 +19,7 @@ class Yosys < Formula
 
   depends_on "bison" => :build
   depends_on "pkg-config" => :build
-  depends_on "python@3.12"
+  depends_on "python@3.13"
   depends_on "readline"
 
   uses_from_macos "flex"
