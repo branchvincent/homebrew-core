@@ -18,7 +18,7 @@ class Metashell < Formula
   end
 
   depends_on "cmake" => :build
-  depends_on "python@3.12" => :build
+  depends_on "python@3.13" => :build
 
   uses_from_macos "libedit"
   uses_from_macos "libxml2"
